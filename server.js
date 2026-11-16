@@ -7,7 +7,15 @@ app.get("/hello", (req, res) => {
   res.type("text/plain").send("Hello from Abdullah's server");
 });
 
-const robotsTxt = "User-agent: *\nDisallow: /api/admin\n";
+// Hard-coded data (no database)
+const courses = [
+  { id: 1, title: "Web Programming", credits: 6 },
+  { id: 2, title: "Data Structures", credits: 5 },
+  { id: 3, title: "Computer Networks", credits: 5 },
+  { id: 4, title: "Databases", credits: 6 },
+];
+
+const robotsTxt ="User-agent: *\nDisallow: /api/admin\n";
 
 app.get("/robots.txt", (req, res) => {
   res.type("text/plain").send(robotsTxt);
@@ -15,6 +23,25 @@ app.get("/robots.txt", (req, res) => {
 
 app.get("/old-page", (req, res) => {
   res.redirect("/hello");
+});
+
+app.get("/api/courses", (req, res) => {
+  res.json(courses);
+});
+
+app.get("/api/status", (req, res) => {
+  res.json({
+    status: "ok",
+    nodeVersion: process.version,
+    uptimeSeconds: Math.round(process.uptime()),
+  });
+});
+
+app.get("/api/headers", (req, res) => {
+  res.json({
+    userAgent: req.get("User-Agent"),
+    accept: req.get("Accept"),
+  });
 });
 
 app.listen(PORT, () => {
