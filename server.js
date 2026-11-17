@@ -3,7 +3,25 @@ import express from "express";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.get("/hello", (req, res) => {
+let requestsServed = 0;
+
+// Middleware 1: request logger
+function requestLogger(req, res, next) {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  next();
+}
+
+// Middleware 2: request counter
+function requestCounter(req, res, next) {
+  requestsServed += 1;
+  next();
+}
+
+// Middleware must be registered before the routes
+app.use(requestLogger);
+app.use(requestCounter);
+
+app.get("/hello",(req, res) => {
   res.type("text/plain").send("Hello from Abdullah's server");
 });
 
@@ -50,6 +68,10 @@ app.post("/api/subscribe", (req, res) => {
 
 app.get("/api/admin", (req, res) => {
   res.status(403).json({ error: "Forbidden" });
+});
+
+app.get("/api/stats", (req, res) => {
+  res.json({ requestsServed });
 });
 
 app.listen(PORT, () => {
