@@ -1,7 +1,11 @@
 import express from "express";
+import path from "node:path";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// import.meta.dirname makes paths independent of the folder the server is started from
+const publicDir = path.join(import.meta.dirname, "public");
 
 let requestsServed = 0;
 
@@ -20,6 +24,9 @@ function requestCounter(req, res, next) {
 // Middleware must be registered before the routes
 app.use(requestLogger);
 app.use(requestCounter);
+
+// Static files (public/index.html is served at "/" by express.static)
+app.use(express.static(publicDir));
 
 app.get("/hello",(req, res) => {
   res.type("text/plain").send("Hello from Abdullah's server");
@@ -72,6 +79,16 @@ app.get("/api/admin", (req, res) => {
 
 app.get("/api/stats", (req, res) => {
   res.json({ requestsServed });
+});
+
+// 404 fallback: registered LAST so it never hides a real route.
+// app.use without a path matches every request that reached this point (Express 5 safe).
+app.use((req, res) => {
+  if (req.path.startsWith("/api")) {
+    res.status(404).json({ error: "Not found" });
+  } else {
+    res.status(404).send("404 - Page not found");
+  }
 });
 
 app.listen(PORT, () => {
