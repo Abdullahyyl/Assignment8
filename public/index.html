@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Programme Server</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Computer Engineering Study Programme</h1>
+      <p>
+        This small server describes a made-up study programme. Use the buttons
+        below to call each API route and see the status code and the body of the
+        response.
+      </p>
+    </header>
+
+    <main>
+      <section class="buttons">
+        <button data-path="/api/courses">GET /api/courses</button>
+        <button data-path="/api/status">GET /api/status</button>
+        <button data-path="/api/headers">GET /api/headers</button>
+        <button data-path="/api/subscribe" data-method="POST">POST /api/subscribe</button>
+        <button data-path="/api/admin">GET /api/admin</button>
+        <button data-path="/api/stats">GET /api/stats</button>
+        <button data-path="/api/does-not-exist">GET /api/does-not-exist</button>
+      </section>
+
+      <section>
+        <h2>Response</h2>
+        <p>Status: <span id="status">-</span></p>
+        <pre id="body">Click a button to see a response.</pre>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
